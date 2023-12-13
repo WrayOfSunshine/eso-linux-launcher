@@ -3,7 +3,7 @@ Launcher for Elder Scrolls Online on Linux with a addon updater and a TTC price 
 
 Starts ESO through steam and closes the ESO launcher once ESO starts (this is reported to improve performance), keeps addons updated with https://www.esoui.com, keeps TTC price table up to date https://us.tamrieltradecentre.com/
 
-By default this is setup to work with the steam version of ESO, check ell.sh for the comments up top if you want to use it without steam.
+By default this is setup to work with the native steam launcher version of ESO (not the run-Steam-itself-under-Proton version), check ell.sh for the comments up top if you want to use it without steam.
 
 ---
 
