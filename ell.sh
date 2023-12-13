@@ -20,17 +20,17 @@
 LICENSE
 
 # Fetch TTC price table before starting ESO. Set to 0 to disable.
-UPDATE_TTC=${UPDATE_TTC:-0}
+UPDATE_TTC=${UPDATE_TTC:-1}
 # Update addons before starting ESO. Set to 0 to disable.
 UPDATE_ADDONS=${UPDATE_ADDONS:-0}
 # Path to ESO addons folder.
-ESO_ADDONS_PATH=${ESO_ADDONS_PATH:-~/.local/share/Steam/steamapps/compatdata/306130/pfx/drive_c/users/steamuser/My Documents/Elder Scrolls Online/live/AddOns}
+ESO_ADDONS_PATH=${ESO_ADDONS_PATH:-~/.steam/root/steamapps/compatdata/306130/pfx/drive_c/users/steamuser/Documents/Elder Scrolls Online/live/AddOns}
 # Command to start ESO
 ESO_COMMAND=${ESO_COMMAND:-"steam steam://rungameid/306130"}
 # Process name used by the ESO launcher - this is what it's called for steam, I don't know about the native launcher. Use pgrep/ps/htop/etc. to find it.
-ESO_LAUNCHER_COMMAND=${ESO_LAUNCHER_COMMAND:-"/bufferselfpatchfix /steam true"}
+ESO_LAUNCHER_COMMAND=${ESO_LAUNCHER_COMMAND:-"/bufferselfpatchfix\ /steam\ true"}
 # Check if Steam is running first - start it before starting ESO - set to 0 to disable
-VERIFY_STEAM_RUNNING=${VERIFY_STEAM_RUNNING:-1}
+VERIFY_STEAM_RUNNING=${VERIFY_STEAM_RUNNING:-0}
 # Try to start steam if not running - this doesn't always work, it's better to copy /usr/share/applications/steam.desktop to ~/.config/autostart
 START_STEAM=${START_STEAM:-0}
 
@@ -58,9 +58,11 @@ fi
 
 bash -c "$ESO_COMMAND"
 
+
 # Wait for the ESO launcher to start.
+echo "Waiting for launcher start."
 LTIME=0
-while [[ $(pgrep -f $ESO_LAUNCHER_COMMAND) == "" ]]; do
+while [[ $(pgrep -f "$ESO_LAUNCHER_COMMAND") == "" ]]; do
 	if [[ $LTIME -ge 240 ]]; then
 		echo "Waited 4 minutes for the ESO launcher, timing out."
 		exit 1
@@ -69,11 +71,12 @@ while [[ $(pgrep -f $ESO_LAUNCHER_COMMAND) == "" ]]; do
 	((LTIME++))
 done
 
+echo "Found launcher, waiting for game start."
 # Kill the launcher once the game is running - the launcher is reported to reduce game performance.
 LTIME=0
 while [[ $(pgrep eso64.exe) == "" ]]; do
 	# The ESO launcher was closed before starting ESO, so stop waiting for ESO to start.
-	if [[ $(pgrep -f $ESO_LAUNCHER_COMMAND) == "" ]]; then
+	if [[ $(pgrep -f "$ESO_LAUNCHER_COMMAND") == "" ]]; then
 		exit 0
 	fi
 	if [[ $LTIME -ge 3600 ]]; then
@@ -84,6 +87,7 @@ while [[ $(pgrep eso64.exe) == "" ]]; do
 	((LTIME+10))
 done
 pkill -f "$ESO_LAUNCHER_COMMAND"
+echo "Killed launcher, waiting for game end."
 
 # You can do stuff here - like use xrandr to change your resolution / refresh rate before ESO starts.
 
