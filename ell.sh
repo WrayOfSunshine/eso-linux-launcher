@@ -91,9 +91,9 @@ echo "Killed launcher, waiting for game end."
 
 # You can do stuff here - like use xrandr to change your resolution / refresh rate before ESO starts.
 
-# Wait until ESO is closed.
-while [[ $(pgrep eso64.exe) != "" ]]; do
-	sleep 30
-done
+# Wait until ESO is closed. If you don't have anything you're doing post-ESO, comment this out.
+# while [[ $(pgrep eso64.exe) != "" ]]; do
+# 	sleep 30
+# done
 
 # You can do stuff now that ESO is closed, like reverting your resolution / refresh rate for example.
